@@ -13,11 +13,11 @@ module.exports = {
     return result
   },
   generateToken(id, email) {
-    let token = jwt.sign({ id, email }, 'shhhhh');
+    let token = jwt.sign({ id, email }, process.env.JWT_SECRET);
     return token
   },
   decodeToken(token) {
-    let decoded = jwt.verify(token, 'shhhhh');
+    let decoded = jwt.verify(token, process.env.JWT_SECRET);
     return decoded
   },
   sendEmail(email) {

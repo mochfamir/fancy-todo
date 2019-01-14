@@ -13,4 +13,5 @@
 | /projects | POST | token | name:String | Add project |
 | /projects | GET | token | none | Get all projects |
 | /projects/:id | GET | token | none | Get project |
-| /projects/:name | PUT | token | none | Add todo on project |
+| /projects/:name | PUT | token | none | Add new todo on project |
+| /projects/:id | PUT | token | user:String | Add new user on project |
