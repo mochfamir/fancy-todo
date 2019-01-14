@@ -60,7 +60,8 @@ module.exports = {
       _id: req.params.id
     })
       .then(project => {
-        project.user.push(req.body.user)
+        console.log(req.member._id)
+        project.user.push(req.member._id)
         return Project.updateOne({
           _id: req.params.id
         }, {
@@ -71,7 +72,7 @@ module.exports = {
         res.status(201).json(result)
       })
       .catch(err => {
-        res.status(500).json(err)
+        res.status(500).json({msg: err.message})
       })
   }
 }

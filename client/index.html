@@ -539,7 +539,7 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            ${responseJSON.message}
+            ${responseJSON.msg}
           </div>`)
         })
     }
@@ -653,7 +653,7 @@
               <div>
                 <div class="form-group">
                   <label for="">Add new member:</label>
-                  <input type="text" class="form-control" id="member" aria-describedby="emailHelp" placeholder="member id">
+                  <input type="text" class="form-control" id="member" aria-describedby="emailHelp" placeholder="member email">
                 </div>
                 <button class="btn btn-primary" onclick="addMember('${response._id}')">Submit</button>
               </div>

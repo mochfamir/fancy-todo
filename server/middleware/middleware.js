@@ -16,6 +16,22 @@ module.exports = {
         res.status(400).json({msg: 'Please login!'})
       })
   },
+  findUser(req, res, next) {
+    User.findOne({
+      email: req.body.user
+    })
+      .then(user => {
+        if (user) {
+          req.member = user
+          next()
+        } else {
+          res.status(400).json({msg: 'User not found'})
+        }
+      })
+      .catch(err => {
+        res.status(500).json({msg: err.message})
+      })
+  },
   findAccount(req, res, next) {
     User.findOne({
       email: req.body.email
