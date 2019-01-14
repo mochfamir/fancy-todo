@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ToDo</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdn.auth0.com/js/lock/11.12/lock.min.js"></script>
+
+  <!-- Latest patch release (recommended for production) -->
+  <script src="https://cdn.auth0.com/js/lock/11.12.1/lock.min.js"></script>
+    
+  <style>
+    body {
+      background-image: url("http://blog.hostbaby.com/wp-content/uploads/2014/03/Trees_1400x900-1024x658.png")
+    }
+    .navbar {
+      background-color: burlywood;
+    }
+    textarea {
+      min-height:110px;
+    }
+    .noresize {
+      resize: none; 
+    }
+  </style>
+</head>
+<body>
+  
+  <nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="#" id="brand"><i class="far fa-calendar-check"></i>To-Do Fancy</a>
+    <button id="btn-login" class="btn btn-outline-success my-2 my-sm-0" type="submit">Sign In</button>
+    <button id="btn-logout" class="btn btn-outline-success my-2 my-sm-0" type="submit">Sign Out</button>
+  </nav>
+  <div id="alertLogin"></div>
+  <div id="login" class="modal fade">
+    <div class="modal-dialog modal-login">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!-- <div class="avatar">
+            <img src="https://i.imgur.com/dGo8DOk.jpg" alt="Avatar">
+          </div>				 -->
+          <h4 class="modal-title">Member Login</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="formLogin">
+            <div class="form-group">
+              <input type="email" class="form-control" placeholder="Email" required="required" id="emailLogin">		
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control" placeholder="Password" required="required" id="passwordLogin">	
+            </div>        
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary btn-lg btn-block login-btn" id="buttonLogin">Login</button>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <a id="link-register" href="">Create an account</a>
+          or login with
+          <a href="" onclick="socialMedia()">social media account</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="register" class="modal fade">
+    <div class="modal-dialog modal-register">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Register</h4>	
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="formRegister">
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Name" required="required" id="nameRegister">		
+            </div>
+            <div class="form-group">
+              <input type="email" class="form-control" placeholder="Email" required="required" id="emailRegister">		
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control" placeholder="Password" required="required" id="passwordRegister">	
+            </div>        
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary btn-lg btn-block register-btn" id="buttonRegister">register</button>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          Already have an account?<a link-register href="">Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="todoList">
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-sm-4">
+          <!-- <legend>Add To-Do</legend> -->
+          <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="true">Profile</a>
+              <a class="nav-item nav-link" id="nav-todo-tab" data-toggle="tab" href="#nav-todo" role="tab" aria-controls="nav-contact" aria-selected="false">Add To Do</a>
+              <a class="nav-item nav-link" id="nav-project-tab" data-toggle="tab" href="#nav-project" role="tab" aria-controls="nav-contact" aria-selected="false">Add Project</a>
+            </div>
+          </nav>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
+            <div class="tab-pane fade" id="nav-todo" role="tabpanel" aria-labelledby="nav-contact-tab">
+              <form id="formAddTodo" class="card-body">
+                <div class="form-group">
+                  <label for="exampleFormControlSelect2">For :</label>
+                  <select class="form-control" id="groupTodo">
+                    <option>Me</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="">Todo</label>
+                  <input type="text" class="form-control" id="nameTodo" aria-describedby="emailHelp">
+                </div>
+                <div class="form-group">
+                  <label for="">Description</label>
+                  <textarea class="form-control noresize" id="descriptionTodo"></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="">Due Date</label>
+                  <input type="date" class="form-control" id="dueDateTodo">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+            <div class="tab-pane fade" id="nav-project" role="tabpanel" aria-labelledby="nav-contact-tab">
+              <form action="" id="formCreateProject" class="card-body">
+                <div class="form-group">
+                  <label for="">Project Name</label>
+                  <input type="text" class="form-control" id="nameProject" aria-describedby="emailHelp">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="card">
+            <div class="card-header">
+              <h3>Task</h3>
+            </div>
+            <h4>My ToDo list</h4>
+            <div class="card-body">
+              <div id="list" class="card-body" style="min-height: 25">
+
+              </div>
+            </div>
+            <ul id="projectList">
+
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <h3>Task Detail</h3>
+          <div id="detail">
+
+          </div>
+          <div id="updateForm">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var options = {
+      allowedConnections: ['twitter', 'facebook', 'google-oauth2', 'linkedin']
+    };
+    var lock = new Auth0Lock(
+      'TiyX1fib03srhjGYu4oy_KWPLauYM5FB',
+      'todo-fancy.eu.auth0.com',
+      options
+    );
+    lock.on("authenticated", function(authResult) {
+      // Use the token in authResult to getUserInfo() and save it to localStorage
+      lock.getUserInfo(authResult.accessToken, function(error, profile) {
+        if (error) {
+          // Handle error
+          return;
+        }
+        loginSocialMedia(profile)
+      });
+    });
+    function socialMedia() {
+      event.preventDefault()
+      lock.show()
+      $('#register').modal('hide')
+      $('#login').modal('hide')
+    }
+  </script>
+  
+
+  <script>
+    function loginButton() {
+      $('#btn-login').show()
+      $('#btn-logout').hide()
+      $('#todoList').hide()
+    }
+    function logoutButton() {
+      $('#btn-login').hide()
+      $('#btn-logout').show()
+      $('#todoList').show()
+    }
+    function cekLogin() {
+      if (localStorage.getItem('accessToken')) {
+        logoutButton()
+      } else {
+        loginButton()
+      }
+    }
+    function loginMethod() {
+      $('#login').modal('hide')
+      $.ajax({
+        method: 'POST',
+        url: 'http://localhost:3000/users/login',
+        data: {
+          email: $('#emailLogin').val(),
+          password: $('#passwordLogin').val()
+        }
+      })
+        .done(response => {
+          localStorage.setItem('accessToken', response.accessToken)
+          localStorage.setItem('user', JSON.stringify(response.user))
+          cekLogin()
+          getTodo()
+          getProjects()
+        })
+        .fail((err) => {
+          $('#alertLogin').html(`<div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            wrong username/password
+          </div>`)
+        })
+    }
+    function registerMethod() {
+      $.ajax({
+        method: 'POST',
+        url: 'http://localhost:3000/users/register',
+        data: {
+          name: $('#nameRegister').val(),
+          email: $('#emailRegister').val(),
+          password: $('#passwordRegister').val()
+        }
+      })
+        .done(response => {
+          $('#register').modal('hide')
+          $('#login').modal('show')
+        })
+        .fail(({responseJSON}) => {
+          alert(responseJSON.err)
+        })
+    }
+    function loginSocialMedia(profile) {
+      $.ajax({
+        method: 'POST',
+        url: 'http://localhost:3000/users/social',
+        data: {
+          name: profile.name,
+          email: profile.email
+        }
+      })
+        .done(response => {
+          localStorage.setItem('accessToken', response.accessToken)
+          localStorage.setItem('user', JSON.stringify(response.user))
+          cekLogin()
+          getTodo()
+          getProjects()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+    function addTodo() {
+      return $.ajax({
+        method: 'POST',
+        url: 'http://localhost:3000/todos',
+        headers: {
+          token: localStorage.getItem('accessToken')
+        },
+        data: {
+          name: $('#nameTodo').val(),
+          description: $('#descriptionTodo').val(),
+          dueDate: $('#dueDateTodo').val()
+        }
+      })
+    }
+    function getTodo() {
+      $.ajax({
+        method: 'GET',
+        url: 'http://localhost:3000/todos',
+        headers: {
+          token: localStorage.getItem('accessToken')
+        }
+      })
+        .done(response => {
+          let tmp = ''
+          response.forEach(todo => {
+            if (!todo.isProject) {
+              let unfinish = `
+                <div class="clearfix">
+                  <h4 id="${todo._id}" class="border-bottom border-dark todo-item show" data-task="${todo._id}" onclick="detail('${todo._id}')">${todo.name}
+                    <a href="" style="color: black" class="float-right checkList" data-task="${todo._id}" onclick="finish('${todo._id}')"><i id="check${todo._id}" class="far fa-check-square"></i></a>
+                  </h4>
+                </div>`
+              let finish = `
+                <h4 id="${todo._id}" class="border-bottom border-dark todo-item show" data-task="${todo._id}" onclick="detail('${todo._id}')"><del>${todo.name}</del>
+                  <a href="" style="color: black" class="float-right delete" data-task="${todo._id}" onclick="remove('${todo._id}')"><i id="delete${todo._id}" class="far fa-trash-alt"></i></a>
+                </h4>`
+              if (todo.status) tmp += finish
+              else tmp += unfinish
+            }
+          })
+          $('#list').html(tmp)
+        })
+        .fail(err => {
+          console.log(err)
+        })
+    }
+    function getDetail(id) {
+      return $.ajax({
+        method: 'GET',
+        url: `http://localhost:3000/todos/${id}`,
+        headers: {
+          token: localStorage.getItem('accessToken')
+        }
+      })
+    }
+    function removeTodo(id) {
+      return $.ajax({
+        method: 'DELETE',
+        url: `http://localhost:3000/todos/${id}`,
+        headers: {
+          token: localStorage.getItem('accessToken')
+        }
+      })
+    }
+    function updateTodo(id, body) {
+      return $.ajax({
+        method: 'PUT',
+        url: `http://localhost:3000/todos/${id}`,
+        headers: {
+          token: localStorage.getItem('accessToken')
+        },
+        data: body
+      })
+    }
+    function creteProject(body) {
+      $.ajax({
+        method: 'POST',
+        url: 'http://localhost:3000/projects',
+        headers: {
+          token: localStorage.getItem('accessToken')
+        },
+        data: body
+      })
+        .done(response => {
+          getProjects()
+          console.log(response)
+        })
+        .fail(err => {
+          console.log(err)
+        })
+    }
+    function getProjects() {
+      $.ajax({
+        method: 'GET',
+        url: 'http://localhost:3000/projects',
+        headers: {
+          token: localStorage.getItem('accessToken')
+        }
+      })
+        .done(response => {
+          let component = ''
+          let option = '<option>Me</option>'
+          response.forEach(value => {
+            component += `<li>
+                            <h4 onclick="projectDetail('${value._id}')">${value.name}</h4>
+                            <div class="card-body">
+                              <div id="${value.name}" class="card-body" style="min-height: 25">
+
+                              </div>
+                            </div>
+                          </li>`
+            option += `<option id="${value._id}">${value.name}</option>`
+          })
+          $('#projectList').html(component)
+          $('#groupTodo').html(option)
+          response.forEach(value => {
+            let temp = ''
+            value.todo.forEach(el => {
+              let unfinish = `
+                <div class="clearfix">
+                  <h4 id="${el._id}" class="border-bottom border-dark todo-item show" onclick="detail('${el._id}')">${el.name}
+                    <a href="" style="color: black" class="float-right checkList"><i id="check${el._id}" class="far fa-check-square" onclick="finish('${el._id}')"></i></a>
+                  </h4>
+                </div>`
+              let finish = `
+                <h4 id="${el._id}" class="border-bottom border-dark todo-item show" onclick="detail('${el._id}')"><del>${el.name}</del>
+                  <a href="" style="color: black" class="float-right delete"><i id="delete${el._id}" class="far fa-trash-alt" onclick="remove('${el._id}')"></i></a>
+                </h4>`
+              if (el.status) temp += finish
+              else temp += unfinish
+            })
+            $(`#${value.name}`).html(temp)
+          })
+        })
+        .fail(response => {
+          console.log(response)
+        })
+    }
+    function updateProject(name, body) {
+      $.ajax({
+        method: 'PUT',
+        url: `http://localhost:3000/projects/${name}`,
+        headers: {
+          token: localStorage.getItem('accessToken')
+        },
+        data: body
+      })
+        .done(response => {
+          console.log(response)
+        })
+        .fail(response => {
+          console.log(response)
+        })
+    }
+    function getProject(id) {
+      return $.ajax({
+        method: 'GET',
+        url: `http://localhost:3000/projects/${id}`,
+        headers: {
+          token: localStorage.getItem('accessToken')
+        }
+      })
+    }
+    
+  </script>
+  <script>
+    $(document).ready(function () {
+      cekLogin()
+      getTodo()
+      getProjects()
+      // $('#updateForm').hide()
+    })
+    $('#btn-logout').click(() => {
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('user')
+      cekLogin()
+    })
+    $('#btn-login').click(() => {
+      $('#login').modal('toggle')
+      $('#emailLogin').val('')
+      $('#passwordLogin').val('')
+    })
+    $('#link-register').click((event) => {
+      event.preventDefault()
+      $('#login').modal('toggle')
+      $('#register').modal('show')
+      $('#nameRegister').val('')
+      $('#emailRegister').val('')
+      $('#passwordRegister').val('')
+    })
+    $('#formLogin').on('submit', (event) => {
+      event.preventDefault()
+      loginMethod()
+    })
+    $('#formRegister').on('submit', (event) => {
+      event.preventDefault()
+      registerMethod()
+    })
+    $('#formAddTodo').on('submit', (event) => {
+      event.preventDefault()
+      addTodo()
+        .done( async (response) => {
+          if($('#groupTodo').val() !== 'Me') {
+            await updateTodo(response._id, {isProject: true})
+            await updateProject($('#groupTodo').val(), {todo: response._id})
+          }
+          name: $('#nameTodo').val('')
+          description: $('#descriptionTodo').val('')
+          dueDate: $('#dueDateTodo').val('')
+          await getTodo()
+          await getProjects()
+        })
+        .fail(() => {
+          console.log('fail')
+        })
+    })
+    $('#formCreateProject').on('submit', event => {
+      event.preventDefault()
+      creteProject({
+        name: $('#nameProject').val()
+      })
+      getProjects()
+    })
+
+    function addMember(id) {
+      event.preventDefault()
+      $.ajax({
+        method: 'PUT',
+        url: `http://localhost:3000/projects/members/${id}`,
+        headers: {
+          token: localStorage.getItem('accessToken')
+        },
+        data: {
+          user: $('#member').val()
+        }
+      })
+        .done(response => {
+          console.log(response)
+        })
+        .fail(response => {
+          console.log(response)
+        })
+    }
+    function detail(id) {
+      getDetail(id)
+        .done(response => {
+          $('#detail').html(`
+            <div class="card-header">
+              <h5 class="card-title">${response.name}</h5>
+            </div>
+            <div class="card-body">
+              <p class="card-text">${response.description}</p>
+            </div>
+            <button class="btn btn-success mt-5" onclick="formUpdate({_id: '${response._id}', name: '${response.name}', dueDate: '${response.dueDate}', description: '${response.description}'})">Update</button>`)
+        })
+        .fail(err => {
+          console.log(err)
+        })
+    }
+    function finish(id) {
+      event.preventDefault()
+      updateTodo(id, {status: true})
+        .done(response => {
+          getTodo()
+          getProjects()
+        })
+        .fail(err => {
+        })
+    }
+    function remove(id) {
+      event.preventDefault()
+      function complete() {
+        removeTodo(id)
+          .done(todo => {
+            getTodo()
+            getProjects()
+            $('#detail').html(`<div></div>`)
+          })
+          .fail(err => {
+          })
+      }
+      $(`#${id}`).fadeOut(1500, complete)
+    }
+    function formUpdate(todo) {
+      $('#updateForm').show()
+      $('#updateForm').html(`
+        <div>
+          <div class="form-group">
+            <label for="">Update Todo<a href="" style="color: black" class="float-right close" onclick="closeFormUpdate()"><i class="far fa-window-close" style="margin-left: 230px"></i></a></label>
+            <input type="text" class="form-control" id="nameUpdateTodo" aria-describedby="emailHelp">
+          </div>
+          <div class="form-group">
+            <label for="">Description</label>
+            <textarea class="form-control noresize" id="descriptionUpdateTodo"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="">Due Date</label>
+            <input type="date" class="form-control" id="dueDateUpdateTodo">
+          </div>
+          <button type="submit" class="btn btn-primary" onclick="update('${todo._id}')">Submit</button>
+        </div>
+      `)
+      $('#nameUpdateTodo').val(todo.name)
+      $('#descriptionUpdateTodo').val(todo.description)
+      $('#dueDateUpdateTodo').val(todo.dueDate)
+    }
+    function closeFormUpdate() {
+      event.preventDefault()
+      $('#updateForm').hide()
+    }
+    function update(id) {
+      $.ajax({
+        method: 'PUT',
+        url: `http://localhost:3000/todos/${id}`,
+        headers: {
+          token: localStorage.getItem('accessToken')
+        },
+        data: {
+          name: $('#nameUpdateTodo').val(),
+          description: $('#descriptionUpdateTodo').val(),
+          dueDate: $('#dueDateUpdateTodo').val()
+        }
+      })
+        .done(response => {
+          getTodo()
+          $('#updateForm').hide()
+          $('#nameUpdateTodo').val('')
+          $('#descriptionUpdateTodo').val('')
+          $('#dueDateUpdateTodo').val('')
+        })
+        .fail(response => {
+          console.log(response)
+        })
+    }
+    function projectDetail(id) {
+      getProject(id)
+        .done(response => {
+          $('#detail').html(`
+              <div class="card-header">
+                <h5 class="card-title">${response.name}</h5>
+              </div>
+              <div class="card-body">
+                <p class="card-text">Created By: ${response.user[0].name}</p>
+              </div>
+              <div>
+                <div class="form-group">
+                  <label for="">Add new member:</label>
+                  <input type="text" class="form-control" id="member" aria-describedby="emailHelp" placeholder="member id">
+                </div>
+                <button class="btn btn-primary" onclick="addMember('${response._id}')">Submit</button>
+              </div>
+              `)
+            console.log(response)
+        })
+        .fail(response => {
+          console.log(response)
+        })
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
