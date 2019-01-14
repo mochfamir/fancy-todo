@@ -9,13 +9,15 @@ const userScema = new Schema({
     required: true, 
     validate: {
       isAsync: true,
-      validator: function(v, cb) {
-        setTimeout(function() {
-          cb(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v), 'Email is not valid!');
-        }, 5);
+      validator: function(value, cb) {
+        Member.findOne({
+          email: value
+        }, function(err, result) {
+          cb(!result, 'Email must unique!')
+        })
       },
-      message: 'Default error message'
     },
+    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Email not valid!"]
   },
   password: { type: String, required: true, minlength: [8, 'Minimum password length is 8'] }
 });

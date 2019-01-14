@@ -11,7 +11,7 @@ module.exports = {
         res.status(201).json(project)
       })
       .catch(err => {
-        res.status(400).json({err: err.message})
+        res.status(400).json({msg: err.message})
       })
   },
   getAll(req, res) {
@@ -42,17 +42,14 @@ module.exports = {
     })
       .then(project => {
         project.todo.push(req.body.todo)
-        Project.updateOne({
+        return Project.updateOne({
           name: req.params.name
         }, {
           todo: project.todo
         })
-          .then(result => {
-            res.status(201).json(result)
-          })
-          .catch(err => {
-            res.status(500).json(err)
-          })
+      })
+      .then(result => {
+        res.status(201).json(result)
       })
       .catch(err => {
         res.status(500).json({msg: 'Internal server error', at: 'update project'})
@@ -63,19 +60,15 @@ module.exports = {
       _id: req.params.id
     })
       .then(project => {
-        console.log(project, '==')
         project.user.push(req.body.user)
-        Project.updateOne({
+        return Project.updateOne({
           _id: req.params.id
         }, {
           user: project.user
         })
-        .then(result => {
-          res.status(201).json(result)
-        })
-        .catch(err => {
-          res.status(500).json(err)
-        })
+      })
+      .then(result => {
+        res.status(201).json(result)
       })
       .catch(err => {
         res.status(500).json(err)

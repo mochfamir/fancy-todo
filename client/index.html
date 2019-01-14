@@ -40,9 +40,6 @@
     <div class="modal-dialog modal-login">
       <div class="modal-content">
         <div class="modal-header">
-          <!-- <div class="avatar">
-            <img src="https://i.imgur.com/dGo8DOk.jpg" alt="Avatar">
-          </div>				 -->
           <h4 class="modal-title">Member Login</h4>
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
@@ -100,7 +97,6 @@
     <div class="container mt-5">
       <div class="row">
         <div class="col-sm-4">
-          <!-- <legend>Add To-Do</legend> -->
           <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
               <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="true">Profile</a>
@@ -260,7 +256,12 @@
           $('#login').modal('show')
         })
         .fail(({responseJSON}) => {
-          alert(responseJSON.err)
+          $('#alertLogin').html(`<div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            ${responseJSON.message}
+          </div>`)
         })
     }
     function loginSocialMedia(profile) {
@@ -370,8 +371,14 @@
           getProjects()
           console.log(response)
         })
-        .fail(err => {
-          console.log(err)
+        .fail(({responseJSON}) => {
+          $('#alertLogin').html(`<div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            ${responseJSON.msg}
+          </div>`)
+          // console.log(err.responseJSON.msg)
         })
     }
     function getProjects() {
@@ -495,8 +502,13 @@
           await getTodo()
           await getProjects()
         })
-        .fail(() => {
-          console.log('fail')
+        .fail(({responseJSON}) => {
+          $('#alertLogin').html(`<div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            ${responseJSON.message}
+          </div>`)
         })
     })
     $('#formCreateProject').on('submit', event => {
@@ -522,8 +534,13 @@
         .done(response => {
           console.log(response)
         })
-        .fail(response => {
-          console.log(response)
+        .fail(({responseJSON}) => {
+          $('#alertLogin').html(`<div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            ${responseJSON.message}
+          </div>`)
         })
     }
     function detail(id) {
@@ -561,7 +578,13 @@
             getProjects()
             $('#detail').html(`<div></div>`)
           })
-          .fail(err => {
+          .fail(({responseJSON}) => {
+            $('#alertLogin').html(`<div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            ${responseJSON.err}
+          </div>`)
           })
       }
       $(`#${id}`).fadeOut(1500, complete)

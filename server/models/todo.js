@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var todoSchema = new Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: [true, 'Name is required'] },
   user: { type: Schema.Types.ObjectId, ref: 'User' },
   description: String,
   status: {

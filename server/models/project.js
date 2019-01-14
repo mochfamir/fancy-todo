@@ -6,7 +6,14 @@ const projectSchema = new Schema({
   user: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   name: {
     type: String,
-    required: true
+    required: true,
+    validate: {
+      validator: function(value) {
+        return new RegExp(/^\s+$/).test(value)
+      },
+      message: "Don't contain white space"
+    },
+    
   }
 })
 
